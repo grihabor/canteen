@@ -1,6 +1,6 @@
 import simpy
 import random
-from gens import source, get, Group, Way
+from gens import source
 
 RANDOM_SEED = 42
 
