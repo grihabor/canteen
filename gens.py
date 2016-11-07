@@ -30,8 +30,17 @@ class Client:
         self.way = way
         self.id = Client.count
         Client.count += 1
-        print('Client {:>3} going to {}'.format(self.id, self.way))
+        print('{} going to {}'.format(self, self.way))
 
+    def __repr__(self):
+        return '<Client [id={:0>2}]>'.format(self.id)
 
 def client_proc(env, c):
+    way = [(index, Place.get(index)) for index in c.way.value[1]]
+    for i, place in way:
+        with place.request() as req:
+            yield req
+            print('{} locked {} at {}'.format(c, i, env.now))
+            yield env.timeout(30)
+            print('{}  freed {} at {}'.format(c, i, env.now))
     yield env.timeout(3)

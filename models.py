@@ -10,10 +10,18 @@ class Place:
 
     @staticmethod
     def set_resourses(env):
-        Place.HOT = Resource(env, capacity=1)
-        Place.COLD = Resource(env, capacity=1)
-        Place.DRINK = Resource(env, capacity=1)
-        Place.CASH_DESK = Resource(env, capacity=1)
+        Place.HOT = [Place.HOT, Resource(env, capacity=1)]
+        Place.COLD = [Place.COLD, Resource(env, capacity=1)]
+        Place.DRINK = [Place.DRINK, Resource(env, capacity=1)]
+        Place.CASH_DESK = [Place.CASH_DESK, Resource(env, capacity=1)]
+
+    @staticmethod
+    def get(index):
+        places = [place for key, place in Place.__dict__.items() if key == key.upper()]
+        for i, way in places:
+            if i == index:
+                return way
+
 
 class Way(Enum):
     HOT_AND_DRINK = [0.8, [Place.HOT, Place.DRINK, Place.CASH_DESK]]
