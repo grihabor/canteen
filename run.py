@@ -1,11 +1,10 @@
 import simpy
+import random
+from gens import source, get, Group, Way
 
-def clock(env, name, tick):
-     while True:
-         print(name, env.now)
-         yield env.timeout(tick)
+RANDOM_SEED = 42
 
+random.seed(RANDOM_SEED)
 env = simpy.Environment()
-
-env.process(clock(env, 'fast', 0.5))
-env.run(until=2)
+env.process(source(env))
+env.run(until=100)
