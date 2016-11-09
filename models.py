@@ -3,7 +3,7 @@ from enum import Enum
 from random import random
 
 
-class Place:
+class PlaceType:
     HOT = 1
     COLD = 2
     DRINK = 3
@@ -11,23 +11,28 @@ class Place:
 
     @staticmethod
     def set_resources(env):
-        Place.HOT = [Place.HOT, Resource(env, capacity=1)]
-        Place.COLD = [Place.COLD, Resource(env, capacity=1)]
-        Place.DRINK = [Place.DRINK, Resource(env, capacity=1)]
-        Place.CASH_DESK = [Place.CASH_DESK, Resource(env, capacity=1)]
+        PlaceType.HOT = [PlaceType.HOT, Place(env, capacity=1)]
+        PlaceType.COLD = [PlaceType.COLD, Place(env, capacity=1)]
+        PlaceType.DRINK = [PlaceType.DRINK, Place(env, capacity=1)]
+        PlaceType.CASH_DESK = [PlaceType.CASH_DESK, Place(env, capacity=1)]
 
     @staticmethod
     def get(index):
-        places = [place for key, place in Place.__dict__.items() if key == key.upper()]
+        places = [place for key, place in PlaceType.__dict__.items() if key == key.upper()]
         for i, way in places:
             if i == index:
                 return way
 
 
+class Place(Resource):
+    def __init__(self, env, capacity=1):
+        super().__init__(env, capacity)
+
+
 class Way(Enum):
-    HOT_AND_DRINK = [0.8, [Place.HOT, Place.DRINK, Place.CASH_DESK]]
-    COLD_AND_DRINK = [0.15, [Place.COLD, Place.DRINK, Place.CASH_DESK]]
-    ONLY_DRINK = [0.05, [Place.DRINK, Place.CASH_DESK]]
+    HOT_AND_DRINK = [0.8, [PlaceType.HOT, PlaceType.DRINK, PlaceType.CASH_DESK]]
+    COLD_AND_DRINK = [0.15, [PlaceType.COLD, PlaceType.DRINK, PlaceType.CASH_DESK]]
+    ONLY_DRINK = [0.05, [PlaceType.DRINK, PlaceType.CASH_DESK]]
 
 
 class Group(Enum):

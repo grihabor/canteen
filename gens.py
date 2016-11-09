@@ -1,4 +1,4 @@
-from models import Place, Group, get, Way
+from models import PlaceType, Group, get, Way
 from random import expovariate
 
 
@@ -8,7 +8,7 @@ def groups_interval():
 
 
 def source(env):
-    Place.set_resources(env)
+    PlaceType.set_resources(env)
     while True:
         group(env, get(Group).value[1])
         yield env.timeout(groups_interval())
@@ -35,8 +35,9 @@ class Client:
     def __repr__(self):
         return '<Client [id={:0>2}]>'.format(self.id)
 
+
 def client_proc(env, c):
-    way = [(index, Place.get(index)) for index in c.way.value[1]]
+    way = [(index, PlaceType.get(index)) for index in c.way.value[1]]
     for i, place in way:
         with place.request() as req:
             yield req
