@@ -1,38 +1,41 @@
 from simpy import Resource
 from enum import Enum
 from random import random
-
-
-class PlaceType:
-    HOT = 1
-    COLD = 2
-    DRINK = 3
-    CASH_DESK = 4
-
-    @staticmethod
-    def set_resources(env):
-        PlaceType.HOT = [PlaceType.HOT, Place(env, capacity=1)]
-        PlaceType.COLD = [PlaceType.COLD, Place(env, capacity=1)]
-        PlaceType.DRINK = [PlaceType.DRINK, Place(env, capacity=1)]
-        PlaceType.CASH_DESK = [PlaceType.CASH_DESK, Place(env, capacity=1)]
-
-    @staticmethod
-    def get(index):
-        places = [place for key, place in PlaceType.__dict__.items() if key == key.upper()]
-        for i, way in places:
-            if i == index:
-                return way
+from constants import PlaceName
 
 
 class Place(Resource):
-    def __init__(self, env, capacity=1):
-        super().__init__(env, capacity)
+    def __init__(self, env, name, service_time, cum_service_time, speed):
+        super().__init__(env)
+        self.name = name
+        self.data = []
+        self.service_time = service_time
+        self.cum_service_time = cum_service_time
+        self.cum = 0
+
+    def get_service_time(self):
+        time = self.service_time(self.cum)
+        self.cum += self.service_time(self.cum)
+        return time
+
+    def request(self, *args, **kwargs):
+        ret = super().request(*args, **kwargs)
+        self.data.append([self._env.now, len(self.queue)])
+        return ret
+
+    def release(self, *args, **kwargs):
+        ret = super().release(*args, **kwargs)
+        self.data.append([self._env.now, len(self.queue)])
+        return ret
+
+    def __repr__(self):
+        return '<Place \'{}\'>'.format(self.name)
 
 
 class Way(Enum):
-    HOT_AND_DRINK = [0.8, [PlaceType.HOT, PlaceType.DRINK, PlaceType.CASH_DESK]]
-    COLD_AND_DRINK = [0.15, [PlaceType.COLD, PlaceType.DRINK, PlaceType.CASH_DESK]]
-    ONLY_DRINK = [0.05, [PlaceType.DRINK, PlaceType.CASH_DESK]]
+    HOT_AND_DRINK = [0.8, [PlaceName.HOT, PlaceName.DRINK, PlaceName.CASH_DESK]]
+    COLD_AND_DRINK = [0.15, [PlaceName.COLD, PlaceName.DRINK, PlaceName.CASH_DESK]]
+    ONLY_DRINK = [0.05, [PlaceName.DRINK, PlaceName.CASH_DESK]]
 
 
 class Group(Enum):
