@@ -8,7 +8,7 @@ def groups_interval():
 
 
 def source(env):
-    Place.set_resourses(env)
+    Place.set_resources(env)
     while True:
         group(env, get(Group).value[1])
         yield env.timeout(groups_interval())

@@ -2,6 +2,7 @@ from simpy import Resource
 from enum import Enum
 from random import random
 
+
 class Place:
     HOT = 1
     COLD = 2
@@ -9,7 +10,7 @@ class Place:
     CASH_DESK = 4
 
     @staticmethod
-    def set_resourses(env):
+    def set_resources(env):
         Place.HOT = [Place.HOT, Resource(env, capacity=1)]
         Place.COLD = [Place.COLD, Resource(env, capacity=1)]
         Place.DRINK = [Place.DRINK, Resource(env, capacity=1)]
@@ -44,18 +45,18 @@ def get(model):
     :return: Enum member
     """
     x = random()
-    for way in model:
-        if not type(way.value) is list:
+    for item in model:
+        if not type(item.value) is list:
             raise TypeError('type({}.value) must be list, got: {}'\
-                .format(way, type(way.value)))
-        if not type(way.value[0]) is float:
+                .format(item, type(item.value)))
+        if not type(item.value[0]) is float:
             raise TypeError('type({}.value[0]) must be float, got: {}'\
-                .format(way, type(way.value[0])))
-        elif way.value[0] < 0. or way.value[0] > 1.:
+                .format(item, type(item.value[0])))
+        elif item.value[0] < 0. or item.value[0] > 1.:
             raise ValueError('{}.value[0] must be between 0. and 1., got: {}'
-                             .format(way, way.value[0]))
+                             .format(item, item.value[0]))
 
-        if way.value[0] > x:
-            return way
+        if item.value[0] > x:
+            return item
         else:
-            x -= way.value[0]
+            x -= item.value[0]
