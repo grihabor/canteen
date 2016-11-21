@@ -1,22 +1,21 @@
 from simpy import Resource
-from enum import Enum
 from random import random
-from constants import PlaceName
 
 
 class Place(Resource):
     def __init__(self, env, name, service_time, cum_service_time, speed):
-        super().__init__(env)
+        super().__init__(env, capacity=5)
         self.name = name
         self.data = []
         self.service_time = service_time
         self.cum_service_time = cum_service_time
-        self.cum = 0
 
     def get_service_time(self):
-        time = self.service_time(self.cum)
-        self.cum += self.service_time(self.cum)
-        return time
+        time = self.service_time()
+        if self.cum_service_time:
+            return time, self.cum_service_time()
+        else:
+            return time, None
 
     def request(self, *args, **kwargs):
         ret = super().request(*args, **kwargs)
@@ -29,20 +28,7 @@ class Place(Resource):
         return ret
 
     def __repr__(self):
-        return '<Place \'{}\'>'.format(self.name)
-
-
-class Way(Enum):
-    HOT_AND_DRINK = [0.8, [PlaceName.HOT, PlaceName.DRINK, PlaceName.CASH_DESK]]
-    COLD_AND_DRINK = [0.15, [PlaceName.COLD, PlaceName.DRINK, PlaceName.CASH_DESK]]
-    ONLY_DRINK = [0.05, [PlaceName.DRINK, PlaceName.CASH_DESK]]
-
-
-class Group(Enum):
-    ONE = [0.5, 1]
-    TWO = [0.3, 2]
-    THREE = [0.1, 3]
-    FOUR = [0.1, 4]
+        return '<Place \'{:<5}\'>'.format(self.name)
 
 
 def get(model):

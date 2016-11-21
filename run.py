@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 import simpy
 import random
 from process import source
@@ -20,16 +22,15 @@ class Uniform:
     def __call__(self, *args, **kwargs):
         return uniform(self.a, self.b)
 
-process.places = {
-    PlaceName.HOT:
-        Place(env, PlaceName.HOT, Uniform(50,120), Uniform(20,40), speed=1),
-    PlaceName.COLD:
-        Place(env, PlaceName.COLD, Uniform(60,180), Uniform(5,15), speed=1),
-    PlaceName.DRINK:
-        Place(env, PlaceName.DRINK, Uniform(5,20), Uniform(5,10), speed=1),
-    PlaceName.CASH_DESK:
-        Place(env, PlaceName.CASH_DESK, lambda cum:sum(cum), None, speed=1)
-}
+process.places = OrderedDict()
+process.places[PlaceName.HOT] = \
+        Place(env, PlaceName.HOT, Uniform(50, 120), Uniform(20, 40), speed=1)
+process.places[PlaceName.COLD] = \
+        Place(env, PlaceName.COLD, Uniform(60, 180), Uniform(5, 15), speed=1)
+process.places[PlaceName.DRINK] = \
+        Place(env, PlaceName.DRINK, Uniform(5, 20), Uniform(5, 10), speed=1)
+process.places[PlaceName.CASH_DESK] = \
+        Place(env, PlaceName.CASH_DESK, None, None, speed=1)
 
 
 env.process(source(env))
