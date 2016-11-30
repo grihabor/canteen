@@ -21,14 +21,14 @@ def client_proc(env, client):
 
     with cash_desk.request() as req:
         yield req
-        print('{} locked {} at {}'.format(client, cash_desk, env.now))
+        client.lock(cash_desk)
         yield env.timeout(client.get_cash_desk_time())
-        print('{}  freed {} at {}'.format(client, cash_desk, env.now))
+        client.unlock(cash_desk)
 
 
 def group(env, number):
     for i in range(number):
-        c = client_proc(env, Client(get(Way)))
+        c = client_proc(env, Client(env, get(Way)))
         env.process(c)
     Client.group_count += 1
     print('Group {:>4} at {}'.format(Client.group_count, env.now))
@@ -38,10 +38,18 @@ class Client:
     group_count = 0
     count = 0
 
-    def __init__(self, way):
+    def lock(self, cash_desk):
+        print('{} locked {} at {}'.format(self, cash_desk, self.env.now))
+
+    def unlock(self, cash_desk):
+        print('{}  freed {} at {}'.format(self, cash_desk, self.env.now))
+
+
+    def __init__(self, env, way):
         self.way = way
         self.id = Client.count
         self.cum = 0
+        self.env = env
         Client.count += 1
         print('{} going to {}'.format(self, self.way))
 
