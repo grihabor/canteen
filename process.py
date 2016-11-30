@@ -1,12 +1,5 @@
-from random import expovariate
 from models import get
-from constants import Group, Way, PlaceName
-
-places = {}
-
-# interval between group arrivals
-def groups_interval():
-    return expovariate(1/30)
+from constants import Group, Way, groups_interval
 
 
 def source(env):
@@ -16,7 +9,7 @@ def source(env):
 
 
 def client_proc(env, client):
-    way = [(index, places[index]) for index in client.way.value[1]]
+    way = [(index, env.places[index]) for index in client.way.value[1]]
     for i, place in way:
         with place.request() as req:
             yield req
@@ -24,11 +17,13 @@ def client_proc(env, client):
             yield env.timeout(client.get_service_time(place))
             print('{}  freed {} at {}'.format(client, place, env.now))
 
-    with places[PlaceName.CASH_DESK].request() as req:
+    cash_desk = env.get_small_queue_cash_desk()
+
+    with cash_desk.request() as req:
         yield req
-        print('{} locked {} at {}'.format(client, places[PlaceName.CASH_DESK], env.now))
+        print('{} locked {} at {}'.format(client, cash_desk, env.now))
         yield env.timeout(client.get_cash_desk_time())
-        print('{}  freed {} at {}'.format(client, places[PlaceName.CASH_DESK], env.now))
+        print('{}  freed {} at {}'.format(client, cash_desk, env.now))
 
 
 def group(env, number):

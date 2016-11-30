@@ -3,15 +3,18 @@ from random import random
 
 
 class Place(Resource):
-    def __init__(self, env, name, service_time, cum_service_time, speed):
-        super().__init__(env, capacity=5)
+    def __init__(self, env, name, service_time=None, cum_service_time=None,
+                 speed=1, capacity=1, index=None):
+        super().__init__(env, capacity=capacity)
         self.name = name
         self.data = []
         self.service_time = service_time
         self.cum_service_time = cum_service_time
+        self.speed = speed
+        self.index = index
 
     def get_service_time(self):
-        time = self.service_time()
+        time = self.service_time() / self.speed
         if self.cum_service_time:
             return time, self.cum_service_time()
         else:
@@ -28,7 +31,9 @@ class Place(Resource):
         return ret
 
     def __repr__(self):
-        return '<Place \'{:<5}\'>'.format(self.name)
+        return '<Place \'{:<5}{}\'>'.format(
+            self.name, '_{}'.format(self.index) if self.index else ''
+        )
 
 
 def get(model):
