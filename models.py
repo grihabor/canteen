@@ -12,6 +12,7 @@ class Place(Resource):
         self.cum_service_time = cum_service_time
         self.speed = speed
         self.index = index
+        # for how long clients were waiting
         self.time_list = []
 
     def get_service_time(self):
