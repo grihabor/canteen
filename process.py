@@ -13,9 +13,9 @@ def client_proc(env, client):
     for i, place in way:
         with place.request() as req:
             yield req
-            print('{} locked {} at {}'.format(client, place, env.now))
+            client.lock(place)
             yield env.timeout(client.get_service_time(place))
-            print('{}  freed {} at {}'.format(client, place, env.now))
+            client.unlock(place)
 
     cash_desk = env.get_small_queue_cash_desk()
 
@@ -40,10 +40,11 @@ class Client:
 
     def lock(self, cash_desk):
         print('{} locked {} at {}'.format(self, cash_desk, self.env.now))
+        self.lock_time = self.env.now
 
     def unlock(self, cash_desk):
         print('{}  freed {} at {}'.format(self, cash_desk, self.env.now))
-
+        cash_desk.add_time(self.env.now - self.lock_time)
 
     def __init__(self, env, way):
         self.way = way

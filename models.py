@@ -12,6 +12,7 @@ class Place(Resource):
         self.cum_service_time = cum_service_time
         self.speed = speed
         self.index = index
+        self.time_list = []
 
     def get_service_time(self):
         time = self.service_time() / self.speed
@@ -29,6 +30,9 @@ class Place(Resource):
         ret = super().release(*args, **kwargs)
         self.data.append([self._env.now, len(self.queue)])
         return ret
+
+    def add_time(self, time):
+        self.time_list.append(time)
 
     def __repr__(self):
         return '<Place \'{:<5}{}\'>'.format(
