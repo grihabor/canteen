@@ -8,12 +8,7 @@ def source(env):
         yield env.timeout(groups_interval())
 
 
-
-
 def client_proc(env, client):
-    global client_count
-    global client_count_list
-
     env.client_count += 1
     env.client_count_list.append([env.now, env.client_count])
 
@@ -48,6 +43,7 @@ def group(env, number):
 class Client:
     group_count = 0
     count = 0
+    #list of all clients
     client_list = []
 
     def lock(self, place):
@@ -56,6 +52,7 @@ class Client:
 
     def unlock(self, place):
         print('{}  freed {} at {}'.format(self, place, self.env.now))
+        # time the client was waiting for
         wait_time = self.env.now - self.lock_time
         place.add_time(wait_time)
         self.time_list.append(wait_time)
@@ -67,6 +64,8 @@ class Client:
         self.env = env
         Client.count += 1
         Client.client_list.append(self)
+
+        # waiting time for each place in the way
         self.time_list = []
 
         print('{} going to {}'.format(self, self.way))

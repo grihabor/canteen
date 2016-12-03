@@ -5,6 +5,7 @@ from random import uniform, randint
 from constants import PlaceName, CASH_DESK_COUNT
 from models import Place
 
+
 class Uniform:
     def __init__(self, a, b):
         self.a = a
@@ -34,6 +35,7 @@ class Canteen(Environment):
             )
 
         self.client_count = 0
+        # list of pairs [timestamp, client_count]
         self.client_count_list = []
 
     def get_small_queue_cash_desk(self):

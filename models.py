@@ -6,10 +6,10 @@ class Place(Resource):
     def __init__(self, env, name, service_time=None, cum_service_time=None,
                  speed=1, capacity=1, index=None):
         super().__init__(env, capacity=capacity)
-        self.name = name
-        self.data = []
+        self.name = name # PlaceName
+        self.data = [] # pairs [timestamp, queue_length]
         self.service_time = service_time
-        self.cum_service_time = cum_service_time
+        self.cum_service_time = cum_service_time # cumulative service time
         self.speed = speed
         self.index = index
         # for how long clients were waiting
