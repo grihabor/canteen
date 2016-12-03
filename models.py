@@ -36,7 +36,7 @@ class Place(Resource):
         self.time_list.append(time)
 
     def __repr__(self):
-        return '<Place \'{:<5}{}\'>'.format(
+        return '<Place \'{}{}\'>'.format(
             self.name, '_{}'.format(self.index) if self.index else ''
         )
 

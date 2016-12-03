@@ -33,6 +33,9 @@ class Canteen(Environment):
                 Place(self, PlaceName.CASH_DESK, index=1+i)
             )
 
+        self.client_count = 0
+        self.client_count_list = []
+
     def get_small_queue_cash_desk(self):
         queues_len = [len(cash_desk.queue) for cash_desk in self.cash_desks]
         min_queue_len = min(queues_len)

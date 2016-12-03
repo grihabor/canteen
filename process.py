@@ -8,7 +8,15 @@ def source(env):
         yield env.timeout(groups_interval())
 
 
+
+
 def client_proc(env, client):
+    global client_count
+    global client_count_list
+
+    env.client_count += 1
+    env.client_count_list.append([env.now, env.client_count])
+
     way = [(index, env.places[index]) for index in client.way.value[1]]
     for i, place in way:
         with place.request() as req:
@@ -25,6 +33,9 @@ def client_proc(env, client):
         yield env.timeout(client.get_cash_desk_time())
         client.unlock(cash_desk)
 
+    env.client_count -= 1
+    env.client_count_list.append([env.now, env.client_count])
+
 
 def group(env, number):
     for i in range(number):
@@ -37,14 +48,17 @@ def group(env, number):
 class Client:
     group_count = 0
     count = 0
+    client_list = []
 
-    def lock(self, cash_desk):
-        print('{} locked {} at {}'.format(self, cash_desk, self.env.now))
+    def lock(self, place):
+        print('{} locked {} at {}'.format(self, place, self.env.now))
         self.lock_time = self.env.now
 
-    def unlock(self, cash_desk):
-        print('{}  freed {} at {}'.format(self, cash_desk, self.env.now))
-        cash_desk.add_time(self.env.now - self.lock_time)
+    def unlock(self, place):
+        print('{}  freed {} at {}'.format(self, place, self.env.now))
+        wait_time = self.env.now - self.lock_time
+        place.add_time(wait_time)
+        self.time_list.append(wait_time)
 
     def __init__(self, env, way):
         self.way = way
@@ -52,6 +66,9 @@ class Client:
         self.cum = 0
         self.env = env
         Client.count += 1
+        Client.client_list.append(self)
+        self.time_list = []
+
         print('{} going to {}'.format(self, self.way))
 
     def get_service_time(self, place):
