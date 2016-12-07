@@ -8,7 +8,6 @@ from constants import *
 
 random.seed(RANDOM_SEED)
 
-
 env = Canteen()
 
 env.process(source(env))

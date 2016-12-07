@@ -16,9 +16,11 @@ class Uniform:
 
 
 class Canteen(Environment):
-    def __init__(self, initial_time=0):
+    def __init__(self, verbose=False, initial_time=0):
 
         super().__init__(initial_time=initial_time)
+
+        self.verbose = verbose
 
         self.places = OrderedDict()
         self.places[PlaceName.HOT] = \

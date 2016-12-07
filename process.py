@@ -37,7 +37,8 @@ def group(env, number):
         c = client_proc(env, Client(env, get(Way)))
         env.process(c)
     Client.group_count += 1
-    print('Group {:>4} at {}'.format(Client.group_count, env.now))
+    if env.verbose:
+        print('Group {:>4} at {}'.format(Client.group_count, env.now))
 
 
 class Client:
@@ -47,11 +48,13 @@ class Client:
     client_list = []
 
     def lock(self, place):
-        print('{} locked {} at {}'.format(self, place, self.env.now))
+        if self.env.verbose:
+            print('{} locked {} at {}'.format(self, place, self.env.now))
         self.lock_time = self.env.now
 
     def unlock(self, place):
-        print('{}  freed {} at {}'.format(self, place, self.env.now))
+        if self.env.verbose:
+            print('{}  freed {} at {}'.format(self, place, self.env.now))
         # time the client was waiting for
         wait_time = self.env.now - self.lock_time
         place.add_time(wait_time)
@@ -68,7 +71,8 @@ class Client:
         # waiting time for each place in the way
         self.time_list = []
 
-        print('{} going to {}'.format(self, self.way))
+        if self.env.verbose:
+            print('{} going to {}'.format(self, self.way))
 
     def get_service_time(self, place):
         time, cum = place.get_service_time()

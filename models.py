@@ -44,7 +44,9 @@ class Place(Resource):
 def get(model):
     """Generates enum item based on probability information
 
+    member.value must be list
     member.value[0] must be the probabilty of getting the member
+
     :param model: Enum class
     :return: Enum member
     """
