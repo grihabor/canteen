@@ -2,7 +2,6 @@ from enum import Enum
 from random import expovariate
 
 SIMULATION_DURATION = 60*90
-CASH_DESK_COUNT = 2
 
 
 class PlaceName:
@@ -23,6 +22,7 @@ class Way(Enum):
     HOT_AND_DRINK = [0.8, [PlaceName.HOT, PlaceName.DRINK]]
     COLD_AND_DRINK = [0.15, [PlaceName.COLD, PlaceName.DRINK]]
     ONLY_DRINK = [0.05, [PlaceName.DRINK]]
+
 
 # interval between group arrivals
 def groups_interval():
