@@ -1,7 +1,6 @@
 from enum import Enum
 from random import expovariate
 
-RANDOM_SEED = 44
 SIMULATION_DURATION = 60*90
 CASH_DESK_COUNT = 2
 
@@ -10,7 +9,7 @@ class PlaceName:
     HOT = 'hot'
     COLD = 'cold'
     DRINK = 'drink'
-    CASH_DESK = 'cash_desk'
+    CASH_DESK = 'cash desk'
 
 
 class Group(Enum):

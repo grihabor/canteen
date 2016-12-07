@@ -37,7 +37,7 @@ class Place(Resource):
 
     def __repr__(self):
         return '<Place \'{}{}\'>'.format(
-            self.name, '_{}'.format(self.index) if self.index else ''
+            self.name, ' {}'.format(self.index) if self.index else ''
         )
 
 
